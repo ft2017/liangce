@@ -1,10 +1,9 @@
 <?php
-session_start(); 
+
+session_start();
 require 'Class.php';
 //require 'upload_file.php';
 ZTHTML::startpage();
-
-
 
 //echo '<h1>量測 10.10.0.106张韬</h1>';
 ZTHTML::htmlh1('量測 10.10.0.106张韬');
@@ -27,7 +26,7 @@ echo '<br />
 <input type="submit" name="submit" value="Submit" class="btn btn-primary"/>
 </form>';
 echo '<br>';
-ZTHTML::showbtn('btn btn-primary', '查看档案','upload');
+ZTHTML::showbtn('btn btn-primary', '查看档案', 'upload');
 //if(sizeof($_SESSION['views'])==0){
 // echo "无上传文件";     
 //}else
@@ -42,12 +41,19 @@ for ($i = 0; $i < $_SESSION['views']; $i++) {
     } 
 }
 
+//if (isset($_SESSION['views' . $i])) {
+//    for ($i = 0; $i < $_SESSION['views']; $i++) {
+//        echo '<br>' . $_SESSION['views' . $i];
+//    }
+//} else {
+//    echo "<br>已清除记录";
+//}
+
 //ini_set('session.use_strict_mode', 1);
 //    $sid = md5('wuxiancheng.cn');
 //    session_id($sid);
 //    session_start();
 //    var_dump(session_id() === $sid);
-
 //file_name::file_name_arr();
 //$session_id=session_id('index.php');
 //$_SESSION['session_id']=$session_id;
@@ -56,6 +62,7 @@ for ($i = 0; $i < $_SESSION['views']; $i++) {
 //   chmod('./xxx', 777);
 //}
 echo '<br><a href="http://10.10.0.106/c001zt/delExcel.php" class="btn btn-primary">删除文件</a>';
+//echo '<br><a href="./app001v2/app001_excel001.php" class="btn btn-primary">导出Excel</a>';
 //echo '<a href="http://10.10.0.106/c001zt/delExcel.php" class="btn btn-primary">删除文件</a>';
 //print_r($_FILES['file']['names']);
 //echo htmlspecialchars($_POST);

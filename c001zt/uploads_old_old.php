@@ -1,14 +1,19 @@
 ﻿<?php
+
 //require 'index.php';
 require 'Class.php';
-//require 'CaseClass_E011.php'; 
+require 'CaseClass_E011.php'; 
 //require 'upload_file.php';
+require 'CaseClass_A25.php'; 
 ZTHTML::startpage();
 session_start();
-
 //echo '<link rel="stylesheet" type="text/css" href="style.css" />'
 // . '<link rel="stylesheet" type="text/css" href="http://10.10.1.80:8080/static/t100/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
 //        <link rel="stylesheet" type="text/cssy" href="http://10.10.1.80:8080/static/t100/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" />';
+$strToday=DEV::getToday();
+$title = "APP001";
+
+$toDownload_A25 = "$title" . "_" . "$strToday.xls"; //档案名称
 
 CLASS UP {
 
@@ -85,8 +90,8 @@ CLASS UP {
             $strTable .= "<tr>";
             //2017-10-27 张一翔
             //流水号
-            if (isset($arr[$key][0])) {
-                $strTable .= "<th>&nbsp;" . (0 + $key) . "&nbsp;</th>";
+            if(isset($arr[$key][0])){
+            $strTable .= "<th>&nbsp;" . (0 + $key) . "&nbsp;</th>";
             }
             $align_index = 0;
             foreach ($val as $key2 => $val2) {
@@ -182,6 +187,7 @@ for ($i = 0; $i < $count; $i++) {
         echo'fail!';
 //                    echo "<script>alert('fail!');window.location.href='index_uploads.php';</script>";
     }
+    
 }
 
 
@@ -192,54 +198,57 @@ echo '<table class="gridtable">';
 $arr[][] = '';
 $arr1[][] = '';
 $x = 0;
-$z = 0;
+$z=0;
 for ($i = 0; $i < $count; $i++) {
 //    echo $arr;
-    $filename = $_FILES["file"]["name"][$i];
+    $filename=$_FILES["file"]["name"][$i];
 //    substr($filename,0,3);
-    if (substr($filename, 0, 3) == 'omm') {
-        $objPHPExcelReader = PHPExcel_IOFactory::load('upload/' . session_id() . $_FILES["file"]["name"][$i]);  //加载excel文件
-        foreach ($objPHPExcelReader->getWorksheetIterator() as $sheet) {  //循环读取sheet
-            foreach ($sheet->getRowIterator() as $row) {  //逐行处理
-                if ($row->getRowIndex() < 2) {  //确定从哪一行开始读取
-                    continue;
-                }
-                echo '<tr>';
-                $y = 0;
-                foreach ($row->getCellIterator() as $cell) {  //逐列读取
-                    echo '<td>';
-                    $data = $cell->getValue(); //获取cell中数据
-                    $arr1[$x][$y] = $data; //通过赋值产生array
-                    $y++;
-                    echo $data;
-                    echo '</td>';
-                }
-                $x++;
-                echo '</tr>';
+    if(substr($filename,0,3)=='omm'){
+    $objPHPExcelReader = PHPExcel_IOFactory::load('upload/' . session_id() . $_FILES["file"]["name"][$i]);  //加载excel文件
+    foreach ($objPHPExcelReader->getWorksheetIterator() as $sheet) {  //循环读取sheet
+        foreach ($sheet->getRowIterator() as $row) {  //逐行处理
+            if ($row->getRowIndex() < 2) {  //确定从哪一行开始读取
+                continue;
             }
-        }
-    } else {
-
-        $objPHPExcelReader = PHPExcel_IOFactory::load('upload/' . session_id() . $_FILES["file"]["name"][$i]);  //加载excel文件
-        foreach ($objPHPExcelReader->getWorksheetIterator() as $sheet) {  //循环读取sheet
-            foreach ($sheet->getRowIterator() as $row) {  //逐行处理
-                if ($row->getRowIndex() < 5) {  //确定从哪一行开始读取
-                    continue;
-                }
-                echo '<tr>';
-                $q = 0;
-                foreach ($row->getCellIterator() as $cell) {  //逐列读取
-                    echo '<td>';
-                    $data = $cell->getValue(); //获取cell中数据
-                    $arr[$z][$q] = $data; //通过赋值产生array
-                    $q++;
-                    echo $data;
-                    echo '</td>';
-                }
-                $z++;
-                echo '</tr>';
+            echo '<tr>';
+            $y = 0;
+            foreach ($row->getCellIterator() as $cell) {  //逐列读取
+                echo '<td>';
+                $data = $cell->getValue(); //获取cell中数据
+                $arr1[$x][$y] = $data;//通过赋值产生array
+                $y++;
+                echo $data;
+                echo '</td>';
             }
+            $x++;
+            echo '</tr>';
         }
+    }
+    
+    }
+   
+    else{
+        
+         $objPHPExcelReader = PHPExcel_IOFactory::load('upload/' . session_id() . $_FILES["file"]["name"][$i]);  //加载excel文件
+    foreach ($objPHPExcelReader->getWorksheetIterator() as $sheet) {  //循环读取sheet
+        foreach ($sheet->getRowIterator() as $row) {  //逐行处理
+            if ($row->getRowIndex() < 5) {  //确定从哪一行开始读取
+                continue;
+            }
+            echo '<tr>';
+            $q = 0;
+            foreach ($row->getCellIterator() as $cell) {  //逐列读取
+                echo '<td>';
+                $data = $cell->getValue(); //获取cell中数据
+                $arr[$z][$q] = $data;//通过赋值产生array
+                $q++;
+                echo $data;
+                echo '</td>';
+            }
+            $z++;
+            echo '</tr>';
+        }
+    }
     }
 }
 echo '</table>';
@@ -250,72 +259,45 @@ echo '</table>';
 //echo '<hr>';
 //
 //var_dump($arr);
+
 //die('...');
 //print_r($arr1);
-$m = count($arr1[0]); //列
-$n = count($arr1, 0); //行
+$m = count($arr1[0]);//列
+$n = count($arr1, 0);//行
 echo $m;
 echo $n;
 
-for ($h = 0; $h < $n; $h++) {
-    if (strstr($arr1[$h][1], '±')) {
-        $arr11 = explode('±', $arr1[$h][1]);
-    } elseif (strstr($arr1[$h][1], '+')) {
-        $arr11 = explode('+', $arr1[$h][1]);
-        if (strstr($arr11[1], '/')) {
-            $arr11[2] = explode('/', $arr11[1]);
-        }
-    }
-
-//echo $h;
-//    print_r($arr11[$h][0]); 
-//    unset($arr[$h][0]);
-//    var_dump($arr11[2][1);
-
-    @$arr1[$h][1] = @$arr11[0];
-    if (strstr($arr11[1], '-')) {
-        $arr12 = explode( '-',$arr11[1]);
-//        var_dump($arr12);
-//        strstr ( $email ,  '@' ,  true )
-        @$arr1[$h][2] = strstr(@$arr12[0],'/',true);
-        @$arr1[$h][3] = @$arr12[1];
-//        return $arr12;
+for($h=0;$h<$n;$h++){
+    if(sizeof($arr1[$h][1])==0){
+        echo '测量值为空';
     }else{
-        @$arr1[$h][2] = @$arr11[1];
-        @$arr1[$h][3] = @$arr11[1];
+   $arr11 =explode('±', $arr1[$h][1]);
+//    unset($arr[$h][0]);
     }
-//    if(strstr($arr12[0], '/')) {
-//       $arr13= explode( '/',$arr12[0]);
-////       @$arr1[$h][2] = @$arr13[];
-//    }
+     @$arr1[$h][1]=@$arr11[0];
+    @$arr1[$h][2]=@$arr11[1];
+    @$arr1[$h][3]=@$arr11[1];
+    @$arr1[$h][4]=@$arr11[0];
+    @$arr1[$h][5]='';
+    @$arr1[$h][6]='';
+    @$arr1[$h][7]=$arr1[$h][0];
+$arr1[$h][0]=$h+1;
     
-    @$arr1[$h][4] = @$arr11[0];
-    @$arr1[$h][5] = '';
-    @$arr1[$h][6] = '';
-    @$arr1[$h][7] = $arr1[$h][0];
-    $arr1[$h][0] = $h + 1;
 }
-//echo UP::getHtmlTable基本款有流水号_自动栏位($arr1);
-//die('...');
-//var_dump($arr1);
-$m = count($arr1[0]); //列
-//echo '================';
-//echo $m;
-//echo '================';
-$n = count($arr1, 0); //行
-//echo '================';
-//echo '<br>'.$n;
-//echo '================';
-$a = count($arr[0]);
+$m = count($arr1[0]);//列
+$n = count($arr1, 0);//行
+$a= count($arr[0]);
 $b = count($arr, 0);
-for ($x = 0; $x < $n; $x++) {
+for($x=0;$x<$n;$x++){
 //    var_dump($arr);
 //   $arr[$b+$x][$a]=$arr1[$x][$m];
-    for ($y = 0; $y < $m; $y++) {
-        $arr[$b + $x][$y] = $arr1[$x][$y];
+    for($y=0;$y<$m;$y++){
+        $arr[$b+$x][$y]=$arr1[$x][$y]; 
     }
+  
 }
 //sort($arr);
+
 //echo UP::getHtmlTable基本款有流水号_自动栏位($arr);
 //echo '<br>';
 //print_r($arr);
@@ -347,6 +329,8 @@ for ($x = 0; $x < $n; $x++) {
 //    }
 //}
 //echo '</table>';
+
+
 //var_dump($arr);
 //echo UP::getHtmlTable基本款有流水号_自动栏位($arr);
 echo count($arr[0]);
@@ -414,12 +398,12 @@ for ($i = 0; $i < $n; $i++) {//循环处理每行，i控制第几行，n是总�
         if ($arr[$i][11] == '') {
             $arr[$i][11] = "OK";
         }
-        if ($arr[$i][$j] != '' && ((floatval($arr[$i][$j]) < ((floatval($arr[$i][1])) - floatval($arr[$i][3]))) || (floatval($arr[$i][$j]) > ((floatval($arr[$i][1]) + floatval($arr[$i][2])))))) {
+if ($arr[$i][$j] != '' && ((floatval($arr[$i][$j]) < ((floatval($arr[$i][1])) - floatval($arr[$i][3]))) || (floatval($arr[$i][$j]) > ((floatval($arr[$i][1]) + floatval($arr[$i][2])))))) {
             $arr[$i][$j] = "<font color='#FF0000'>" . $arr[$i][$j] . "</font>";
             $arr[$i][11] = "NG";
         }
     }
-
+    
     if (@$arr[$i][2] == @$arr[$i][3] && @$arr[$i][2] == 0) {//是否为【0】
     } elseif ($arr[$i][2] == $arr[$i][3] && $arr[$i][2] != 0) {//是否为【相同】上下限按规则改变
         $arr[$i][1] .= "±" . $arr[$i][2];

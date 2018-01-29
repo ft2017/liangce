@@ -679,7 +679,7 @@ $toDownload_A25 = "$title" . "_" . "$strToday.xls"; //档案名称
 
  */
 
-function makeExcelSheetAPP001($sql, $sheetIndex, $sheetTitle) {
+function makeExcelSheetAPP001($arr, $sheetIndex, $sheetTitle) {
     global $TITLE_FONT;
     global $TITLE_HEIGHT;
     global $BODY_FONT;
@@ -816,13 +816,13 @@ function makeExcelSheetAPP001($sql, $sheetIndex, $sheetTitle) {
 //$callStartTime = microtime(true);
 }
 
-$sql = "SELECT 
-WO,STN,在制數,良品轉入-良品轉出-當站報廢-待轉入-待轉出-分割转出-待完工-待PQC數  CHK_在制数,良品轉入, 良品轉出, 當站報廢, 委外加工數, 委外完成數, 待轉入, 待開工, 待完工, 待轉出,分割转出, 待PQC數 
-FROM FT_SFCB_T_MORE
-WHERE 在制數<>良品轉入-良品轉出-當站報廢-待轉入-待轉出-分割转出-待完工-待PQC數
-";
+//$sql = "SELECT 
+//WO,STN,在制數,良品轉入-良品轉出-當站報廢-待轉入-待轉出-分割转出-待完工-待PQC數  CHK_在制数,良品轉入, 良品轉出, 當站報廢, 委外加工數, 委外完成數, 待轉入, 待開工, 待完工, 待轉出,分割转出, 待PQC數 
+//FROM FT_SFCB_T_MORE
+//WHERE 在制數<>良品轉入-良品轉出-當站報廢-待轉入-待轉出-分割转出-待完工-待PQC數
+//";
 $objPHPExcel = new PHPExcel(); //Excel档案的object
-makeExcelSheetAPP001($sql, 0, "尺寸報告"); //sheet0
+makeExcelSheetAPP001($arr, 0, "尺寸報告"); //sheet0
 
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //要用PHP生成Excel的object
 $f = GEN::getOutputFile(__FILE__, $toDownload_A25); //指定要下载的路径和档案名称
