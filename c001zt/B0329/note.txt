@@ -1,0 +1,35 @@
+Note:
+
+1. 在 Enterprise Sheet UI,用補丁放式插入 row49,加入難度係數，
+2. 汇率更改為USD1.00 = RMB6.65
+3. 修復加總的錯位
+4. 生成 Excel前, 調整公式
+   使用工具生成所需的代碼, 主要是擴展col C到H.
+5. 確認兩個環境對百分比的處理不同.
+
+
+
+
+--------- 原始邮件信息 ---------
+发件人: "jason.hsu" <jason.hsu@fulltech-metal.com>
+收件人: "'陈炳陵'" <mark.chen@fulltech-metal.com>
+主题: 回覆: 回覆: 报价公式上的汇率计算基准，請更改為 USD1.00 = RMB6.65
+日期: 2017/03/30 23:07:59 (Thu)
+
+Mark,
+
+
+翻译英文如下：
+
+ 
+
+10)粉体烤漆.液体烤漆...：Powder. Wet Painting…   
+遮蔽費用：Masking
+印刷費用：Printing
+镭雕費用： Laser cut
+渗补: Impregnation
+时效 : Ageing-Heat Treatment.
+
+ 
+
+Jason 

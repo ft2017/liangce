@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="jquery-1.11.3.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("button").click(function () {
+                    $.post("post001-php.php", {
+                        name: "Mark",
+                        city: "昆山"
+                    },
+                            function (data, status) {
+//                        alert("Data: " + data + "\nStatus: " + status);
+                                $("#div-msg").html(data).css("color", "gray").css("fontSize", "16px").show(100);
+                            });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <button>post001 傳資料到從頁面 php-post001 獲得信息並顯示於後</button>
+        <div id ="div-msg"></div>
+    </body>
+</html>
