@@ -1,15 +1,32 @@
 ﻿<?php
 //require 'index.php';
 require 'Class.php';
-//require 'CaseClass_E011.php'; 
+require 'CaseClass_E011.php';
 //require 'upload_file.php';
+require 'CaseClass_A25.php';
+//require 'PHPExcel.php';
+
 ZTHTML::startpage();
 session_start();
-
+ini_set('date.timezone', 'Asia/Shanghai');
+set_include_path(get_include_path() . PATH_SEPARATOR . './Classes/');
+include 'PHPExcel/IOFactory.php';
+header("content-type:text/html;charset=utf-8");
+echo '<a href="http://10.10.0.106/c001zt/" class = "btn btn-primary">返回上传页面</a>';
+echo "<pre>";
+print_r($_FILES);
+echo "</pre>";
 //echo '<link rel="stylesheet" type="text/css" href="style.css" />'
 // . '<link rel="stylesheet" type="text/css" href="http://10.10.1.80:8080/static/t100/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
 //        <link rel="stylesheet" type="text/cssy" href="http://10.10.1.80:8080/static/t100/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" />';
 
+$TITLE_FONT = 24;
+$TITLE_HEIGHT = 40;
+$BODY_FONT = 14;
+//$objPHPExcel = new PHPExcel();
+$objPHPExcel = new PHPExcel();
+
+$strToday = DEV::getToday();
 CLASS UP {
 
     static public function getHtmlTable基本款有流水号_自动栏位($arr) {
@@ -152,16 +169,145 @@ CLASS UP {
         return $strTable;
     }
 
+    static public function makeExcelSheetAPP001($arr, $sheetIndex, $sheetTitle) {
+        global $TITLE_FONT;
+        global $TITLE_HEIGHT;
+        global $BODY_FONT;
+
+        global $objPHPExcel;
+        global $strToday;
+
+//    $msgWorkSheet = new PHPExcel_Worksheet($objPHPExcel, 'card_message'); //创建一个工作表
+//    $objPHPExcel->addSheet($msgWorkSheet); //插入工作表
+        $objPHPExcel->setActiveSheetIndex($sheetIndex);
+
+        $objPHPExcel->getDefaultStyle()->getFont()->setName('Arial')->setSize($BODY_FONT);
+        //（一）標題
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', "Production Part Approval   Dimensional Results");
+        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight($TITLE_HEIGHT); //    $objPHPExcel->getActiveSheet()->getStyle( 'A1')->getFont()->getColor()->setRGB('D4D4D4' );
+// $objPHPExcel->getActiveSheet()->getStyle( 'A2:I2')->getFill()->getStartColor()->setARGB('FFD4D4D4');
+        $objPHPExcel->getActiveSheet()->getStyle('A2:I2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('D4D4D4'); //设置第一行背景色为ccffff
+        $objPHPExcel->getActiveSheet()->mergeCells('A1:N4');
+        $objPHPExcel->getActiveSheet()->mergeCells('A7:B7');
+        $objPHPExcel->getActiveSheet()->mergeCells('A5:B5');
+        $objPHPExcel->getActiveSheet()->mergeCells('C5:G5');
+        $objPHPExcel->getActiveSheet()->mergeCells('C6:G6');
+        $objPHPExcel->getActiveSheet()->mergeCells('B12:B13');
+
+
+
+        //（二）table col name
+//    $objPHPExcel->getActiveSheet()->setCellValue('A2', '部门')
+//            ->setCellValue('B2', '部门名称')
+//            ->setCellValue('C2', '工序')
+//            ->setCellValue('D2', '工序名称')
+//            ->setCellValue('E2', '产品')
+//            ->setCellValue('F2', '工单')
+//            ->setCellValue('G2', '数量')
+//            ->setCellValue('H2', '项次')
+//            ->setCellValue('I2', '产品名称')
+//
+//            
+//            
+//    ;
+//    $objPHPExcel->getActiveSheet()->mergeCells('A5:G6');
+        $objPHPExcel->getActiveSheet()->mergeCells('A12:A13');
+        $objPHPExcel->getActiveSheet()->getStyle('A12')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+        $objPHPExcel->getActiveSheet()->setCellValue('A12', 'ITEM')
+                ->setCellValue('B12', 'DIMENSION / SPECIFICATION')
+                ->setCellValue('A5', 'SUPPLIER')
+                ->setCellValue('C5', '富钛金属科技（昆山）有限公司')
+                ->setCellValue('C6', 'FULLTECH INDUSTRY (KUNSHAN)CO.LTD')
+                ->setCellValue('H5', 'PART NUMBER')
+                ->setCellValue('I6', '617523500G')
+                ->setCellValue('A7', 'INSPECTION FACILITY')
+                ->setCellValue('H7', 'PART NAME')
+                ->setCellValue('I7', '6175235螺纹头')
+                ->setCellValue('A9', 'REMARKS')
+                ->setCellValue('B10', '6175235_007 6207767_004')
+                ->setCellValue('I7', '6175235螺纹头')
+
+        ;
+        //（三）table content
+//    $arr = T100PROD::getArray($sql);
+//    100	14.9±0.05		SC	OMM+height gageOMM+height gage	617523500G	14.89 	14.90 	14.89 	14.89 			OK	
+//    $arr01 = array('100', '14.9±0.05', 'SC', 'OMM+height gageOMM+height gage', '617523500G', '14.89', '14.90', '14.89', '14.89');
+//    $arr[] = $arr01;
+//    $arr[] = $arr01;
+//    $arr[] = $arr01;
+
+
+//        var_dump($arr);
+
+        $objPHPExcel->getActiveSheet()->fromArray($arr, NULL, 'A14');
+//    echo date('H:i:s'), " Rename worksheet", EOL;
+
+        $objPHPExcel->getActiveSheet()->setTitle($sheetTitle);
+// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+//$objPHPExcel->getDefaultStyle()->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+//    $objPHPExcel->getDefaultStyle()->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+        $objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setSize($TITLE_FONT);
+        $objPHPExcel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('B2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('C2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('C6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('D2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('E2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('F2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('G2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('H2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle('I2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+//    $objPHPExcel->getActiveSheet()->getRowDimension('1')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight($TITLE_HEIGHT);
+
+
+        $widthBase = 9;
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth($widthBase * 2.5);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(0.1 * $widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth($widthBase);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth($widthBase);
+//循环  
+        $maxRec = sizeof($arr) + 3;
+//    $maxRec = 10; // NOTE: for debug
+
+        for ($i = 3; $i < $maxRec; $i++) {
+//$objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $i);  
+
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('B' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+//$objPHPExcel->getActiveSheet()->setCellValue('B' . $i, 'Test value'); 
+            $objPHPExcel->getActiveSheet()->getStyle('C' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('D' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('E' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('F' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('H' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('G' . $i)->getNumberFormat()->setFormatCode('#,##0');
+            $objPHPExcel->getActiveSheet()->getStyle('I' . $i)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        }
+//#,##0;-#,##0
+// Save Excel 95 file
+//echo date('H:i:s'), " Write to Excel5 format", EOL;
+//$callStartTime = microtime(true);
+    }
+
 }
 
-ini_set('date.timezone', 'Asia/Shanghai');
-set_include_path(get_include_path() . PATH_SEPARATOR . './Classes/');
-include 'PHPExcel/IOFactory.php';
-header("content-type:text/html;charset=utf-8");
-echo '<a href="http://10.10.0.106/c001zt/" class = "btn btn-primary">返回上传页面</a>';
-echo "<pre>";
-print_r($_FILES);
-echo "</pre>";
+
 
 $count = count($_FILES['file']['name']);
 $_SESSION['views'] = $count;
@@ -254,8 +400,8 @@ echo '</table>';
 //print_r($arr1);
 $m = count($arr1[0]); //列
 $n = count($arr1, 0); //行
-echo $m;
-echo $n;
+//echo $m;
+//echo $n;
 
 for ($h = 0; $h < $n; $h++) {
     if (strstr($arr1[$h][1], '±')) {
@@ -274,13 +420,13 @@ for ($h = 0; $h < $n; $h++) {
 
     @$arr1[$h][1] = @$arr11[0];
     if (strstr($arr11[1], '-')) {
-        $arr12 = explode( '-',$arr11[1]);
+        $arr12 = explode('-', $arr11[1]);
 //        var_dump($arr12);
 //        strstr ( $email ,  '@' ,  true )
-        @$arr1[$h][2] = strstr(@$arr12[0],'/',true);
+        @$arr1[$h][2] = strstr(@$arr12[0], '/', true);
         @$arr1[$h][3] = @$arr12[1];
 //        return $arr12;
-    }else{
+    } else {
         @$arr1[$h][2] = @$arr11[1];
         @$arr1[$h][3] = @$arr11[1];
     }
@@ -288,7 +434,7 @@ for ($h = 0; $h < $n; $h++) {
 //       $arr13= explode( '/',$arr12[0]);
 ////       @$arr1[$h][2] = @$arr13[];
 //    }
-    
+
     @$arr1[$h][4] = @$arr11[0];
     @$arr1[$h][5] = '';
     @$arr1[$h][6] = '';
@@ -299,22 +445,30 @@ for ($h = 0; $h < $n; $h++) {
 //die('...');
 //var_dump($arr1);
 $m = count($arr1[0]); //列
-//echo '================';
-//echo $m;
-//echo '================';
 $n = count($arr1, 0); //行
-//echo '================';
-//echo '<br>'.$n;
-//echo '================';
+//if (isset($arr)) {
 $a = count($arr[0]);
 $b = count($arr, 0);
+//} else {
+//    $arr[][]='';
+$a = 0;
+$b = 0;
+//}
 for ($x = 0; $x < $n; $x++) {
 //    var_dump($arr);
 //   $arr[$b+$x][$a]=$arr1[$x][$m];
-    for ($y = 0; $y < $m; $y++) {
-        $arr[$b + $x][$y] = $arr1[$x][$y];
+    if (isset($arr)) {
+        for ($y = 0; $y < $m; $y++) {
+            $arr[$b + $x][$y] = $arr1[$x][$y];
+        }
+    } else {
+        $arr = $arr1;
     }
 }
+
+//var_dump($arr);
+//echo UP::getHtmlTable基本款有流水号_自动栏位($arr);
+//die('xxxxxxxxxxxxxxxxx');
 //sort($arr);
 //echo UP::getHtmlTable基本款有流水号_自动栏位($arr);
 //echo '<br>';
@@ -439,10 +593,27 @@ sort($arr);
 //    array_splice($arr[1],0); //删除第7列
 echo UP::getHtmlTable基本款有流水号_自动栏位($arr);
 
+//die('xxxxxxxxxxxxxxx');
+
+//echo 'xxxxxxxxxxx';
+
+//$sql = "SELECT 
+//WO,STN,在制數,良品轉入-良品轉出-當站報廢-待轉入-待轉出-分割转出-待完工-待PQC數  CHK_在制数,良品轉入, 良品轉出, 當站報廢, 委外加工數, 委外完成數, 待轉入, 待開工, 待完工, 待轉出,分割转出, 待PQC數 
+//FROM FT_SFCB_T_MORE
+//WHERE 在制數<>良品轉入-良品轉出-當站報廢-待轉入-待轉出-分割转出-待完工-待PQC數
+//";
+$title = "APP001";
+
+$toDownload_A25 = "$title" . "_" . "$strToday.xls"; //档案名称
 
 
+$objPHPExcel = new PHPExcel(); //Excel档案的object
+UP::makeExcelSheetAPP001($arr, 0, "尺寸報告"); //sheet0
 
-
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //要用PHP生成Excel的object
+$f = GEN::getOutputFile(__FILE__, $toDownload_A25); //指定要下载的路径和档案名称
+$objWriter->save($f); //PHP生成Excel并保存在上述指定路径
+echo "<BR><a class='btn btn-primary btn-lg' href='gen/$toDownload_A25'>點擊下載 【 $toDownload_A25 】</a>";
 //echo $arr[17][8] != '';
 //echo (floatval($arr[17][5]) > (floatval($arr[17][1]) - floatval($arr[17][3])));
 //echo floatval($arr[17][5])."<br>";
@@ -450,4 +621,5 @@ echo UP::getHtmlTable基本款有流水号_自动栏位($arr);
 //echo number_format(floatval($arr[17][2]),2)."<br>";
 //echo floatval($arr[17][5]) > ((floatval($arr[17][1])) - floatval($arr[17][3]));
 //echo floatval($arr[17][5]) < ((floatval($arr[17][1])) + floatval($arr[17][2]));
+
 ZTHTML::endpage();
